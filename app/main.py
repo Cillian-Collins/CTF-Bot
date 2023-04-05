@@ -68,7 +68,7 @@ async def create(ctx, arg):
         }
 
         # Create new channel for CTF
-        await ctx.create_text_channel(e.name, category=1025881356057714748, overwrites=overwrites)
+        await ctx.message.guild.create_text_channel(e.name, category=1025881356057714748, overwrites=overwrites)
 
         await ctx.message.channel.send("Event successfully updated.")
 
