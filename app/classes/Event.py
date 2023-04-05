@@ -29,6 +29,9 @@ class Event:
                 # Event has finished
                 return "The event has ended."
 
+    def set_role(self, role) -> None:
+        self.role = role
+
     def __time_until_event(self) -> str:
         td = relativedelta(self.start, datetime.now(timezone.utc))
         return self.__relative_delta_to_string(td, "begins")
