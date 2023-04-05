@@ -39,10 +39,9 @@ async def debug(ctx, arg):
     await ctx.message.channel.send(f"-bash: {arg}: command not found")
 
 
-
-
 @bot.command()
-async def event(ctx, arg=None):
+@commands.has_permissions(administrator=True)
+async def create(ctx, arg):
     if ctx.message.author.guild_permissions.administrator and arg and arg.isnumeric():
         r = requests.get(f"https://ctftime.org/api/v1/events/{arg}/",
                          headers={"User-Agent": None})
@@ -51,6 +50,9 @@ async def event(ctx, arg=None):
         e = Event(data['title'], data['description'], data['start'], data['finish'], data['url'])
         os.environ['EVENT'] = base64.b64encode(pickle.dumps(e)).decode('ascii')
 
+
+@bot.command()
+async def event(ctx):
     if os.getenv("EVENT"):
         e: Event = pickle.loads(base64.b64decode(os.getenv("EVENT")))
         await ctx.message.channel.send(e.status())
