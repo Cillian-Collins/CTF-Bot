@@ -68,7 +68,7 @@ async def create(ctx, arg):
         }
 
         # Fetch the category we want
-        category = discord.utils.get(ctx.message.guild, id=1025881356057714748)
+        category = ctx.message.guild.get_channel(1025881356057714748)
 
         # Create new channel for CTF
         await ctx.message.guild.create_text_channel(e.name, category=category, overwrites=overwrites)
