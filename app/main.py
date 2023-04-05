@@ -35,6 +35,13 @@ async def play(ctx):
 
 
 @bot.command()
+async def debug(ctx, arg):
+    await ctx.message.channel.send(f"-bash: {arg}: command not found")
+
+
+
+
+@bot.command()
 async def event(ctx, arg=None):
     if ctx.message.author.guild_permissions.administrator and arg and arg.isnumeric():
         r = requests.get(f"https://ctftime.org/api/v1/events/{arg}/",
