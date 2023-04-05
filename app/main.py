@@ -32,7 +32,8 @@ async def on_ready():
 @bot.command()
 async def play(ctx):
     e: Event = pickle.loads(base64.b64decode(os.getenv("EVENT")))
-    await ctx.message.author.add_roles(e.role)
+    role = discord.utils.get(ctx.message.guild.roles, id=e.role)
+    await ctx.message.author.add_roles(role)
     await ctx.message.channel.send(f"You have been added to the channel for {e.name}.")
 
 
@@ -62,7 +63,7 @@ async def create(ctx, arg):
 
         # Create overwrites for new channel
         overwrites = {
-            ctx.default_role: discord.PermissionOverwrite(read_messages=False),
+            ctx.message.guild.default_role: discord.PermissionOverwrite(read_messages=False),
             role: discord.PermissionOverwrite(read_messages=True),
         }
 
