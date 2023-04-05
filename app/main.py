@@ -52,7 +52,7 @@ async def create(ctx, arg):
         e = Event(data['title'], data['description'], data['start'], data['finish'], data['url'])
 
         # Create new role for CTF
-        role = await ctx.create_role(name=e.name)
+        role = await ctx.message.guild.create_role(name=e.name)
 
         # Update object to contain role
         e.set_role(role)
