@@ -67,8 +67,11 @@ async def create(ctx, arg):
             role: discord.PermissionOverwrite(read_messages=True),
         }
 
+        # Fetch the category we want
+        category = discord.utils.get(ctx.message.guild, id=1025881356057714748)
+
         # Create new channel for CTF
-        await ctx.message.guild.create_text_channel(e.name, category=1025881356057714748, overwrites=overwrites)
+        await ctx.message.guild.create_text_channel(e.name, category=category, overwrites=overwrites)
 
         await ctx.message.channel.send("Event successfully updated.")
 
