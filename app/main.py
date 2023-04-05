@@ -55,7 +55,7 @@ async def create(ctx, arg):
         role = await ctx.message.guild.create_role(name=e.name)
 
         # Update object to contain role
-        e.set_role(role)
+        e.set_role(role.id)
 
         # Serialize event and save to environment variable
         os.environ['EVENT'] = base64.b64encode(pickle.dumps(e)).decode('ascii')

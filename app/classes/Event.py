@@ -12,6 +12,7 @@ class Event:
         self.start = datetime.strptime(start, "%Y-%m-%dT%H:%M:%S%z")
         self.finish = datetime.strptime(finish, "%Y-%m-%dT%H:%M:%S%z")
         self.url = url
+        self.role = None
 
     def add_player(self, player_id: str) -> None:
         # Assign the player a role
@@ -29,8 +30,8 @@ class Event:
                 # Event has finished
                 return "The event has ended."
 
-    def set_role(self, role) -> None:
-        self.role = role
+    def set_role(self, role_id: str) -> None:
+        self.role = role_id
 
     def __time_until_event(self) -> str:
         td = relativedelta(self.start, datetime.now(timezone.utc))
