@@ -49,6 +49,7 @@ async def create(ctx, arg):
 
         e = Event(data['title'], data['description'], data['start'], data['finish'], data['url'])
         os.environ['EVENT'] = base64.b64encode(pickle.dumps(e)).decode('ascii')
+        await ctx.message.channel.send("Event successfully updated.")
 
 
 @bot.command()
