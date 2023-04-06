@@ -46,11 +46,11 @@ class Event:
         return self.__relative_delta_parse_message(td, "ends")
 
     def __relative_delta_parse_message(self, td, m) -> str:
-        output = self.__relative_delta_to_string()
+        output = self.__relative_delta_to_string(td)
         output += f" until {self.name} {m}.\nMore information: {self.url}"
         return output
 
-    def __relative_delta_to_string(self, td):
+    def __relative_delta_to_string(self, td) -> str:
         output_array = []
         output_array.append(f"{td.days} days") if td.days > 0 else None
         output_array.append(f"{td.hours} hours") if td.hours > 0 else None
