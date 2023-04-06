@@ -75,7 +75,7 @@ async def create(ctx, arg):
 
         embed = discord.Embed(title=e.name, description=e.running_time(), color=0x00ff00, url=e.url)
 
-        await channel.send(embed)
+        await channel.send(embed=embed)
         await ctx.message.channel.send("Event successfully updated.")
 
 
