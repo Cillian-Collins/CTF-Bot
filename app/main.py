@@ -71,8 +71,11 @@ async def create(ctx, arg):
         category = ctx.message.guild.get_channel(1025881356057714748)
 
         # Create new channel for CTF
-        await ctx.message.guild.create_text_channel(e.name, category=category, overwrites=overwrites)
+        channel = await ctx.message.guild.create_text_channel(e.name, category=category, overwrites=overwrites)
 
+        embed = discord.Embed(title=e.name, description=e.running_time(), color=0x00ff00, url=e.url)
+
+        await channel.send(embed)
         await ctx.message.channel.send("Event successfully updated.")
 
 

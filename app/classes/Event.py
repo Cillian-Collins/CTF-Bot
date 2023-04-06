@@ -33,21 +33,28 @@ class Event:
     def set_role(self, role_id: str) -> None:
         self.role = role_id
 
+    def running_time(self) -> str:
+        td = relativedelta(self.start, self.finish)
+        return f"The CTF will run for {self.__relative_delta_to_string(td)}."
+
     def __time_until_event(self) -> str:
         td = relativedelta(self.start, datetime.now(timezone.utc))
-        return self.__relative_delta_to_string(td, "begins")
+        return self.__relative_delta_parse_message(td, "begins")
 
     def __time_until_finish(self) -> str:
         td = relativedelta(datetime.now(timezone.utc), self.finish)
-        return self.__relative_delta_to_string(td, "ends")
+        return self.__relative_delta_parse_message(td, "ends")
 
-    def __relative_delta_to_string(self, td, m) -> str:
+    def __relative_delta_parse_message(self, td, m) -> str:
+        output = self.__relative_delta_to_string()
+        output += f" until {self.name} {m}.\nMore information: {self.url}"
+        return output
+
+    def __relative_delta_to_string(self, td):
         output_array = []
         output_array.append(f"{td.days} days") if td.days > 0 else None
         output_array.append(f"{td.hours} hours") if td.hours > 0 else None
         output_array.append(f"{td.minutes} minutes") if td.minutes > 0 else None
         output_array.append(f"{td.seconds} seconds") if td.seconds > 0 else None
         output = ", ".join(output_array)
-        output += f" until {self.name} {m}.\nMore information: {self.url}"
         return output
-
