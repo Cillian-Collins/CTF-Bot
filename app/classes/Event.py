@@ -35,9 +35,7 @@ class Event:
 
     def running_time(self) -> str:
         td = relativedelta(self.start, self.finish)
-        print(td)
-        d = self.__relative_delta_to_string(td)
-        return f"The CTF will run for {d}."
+        return f"The CTF will run for {self.__relative_delta_to_string(td)}."
 
     def __time_until_event(self) -> str:
         td = relativedelta(self.start, datetime.now(timezone.utc))
@@ -55,9 +53,10 @@ class Event:
     @staticmethod
     def __relative_delta_to_string(td) -> str:
         output_array = []
-        output_array.append(f"{td.days} days") if td.days > 0 else None
-        output_array.append(f"{td.hours} hours") if td.hours > 0 else None
-        output_array.append(f"{td.minutes} minutes") if td.minutes > 0 else None
-        output_array.append(f"{td.seconds} seconds") if td.seconds > 0 else None
+        output_array.append(f"{td.days} days") if td.days != 0 else None
+        output_array.append(f"{td.hours} hours") if td.hours != 0 else None
+        output_array.append(f"{td.minutes} minutes") if td.minutes != 0 else None
+        output_array.append(f"{td.seconds} seconds") if td.seconds != 0 else None
+        output_array.append(f"{td.seconds} seconds") if td.seconds != 0 else None
         output = ", ".join(output_array)
         return output
