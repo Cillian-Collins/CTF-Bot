@@ -34,7 +34,7 @@ class Event:
         self.role = role_id
 
     def running_time(self) -> str:
-        td = relativedelta(self.start, self.finish)
+        td = relativedelta(self.finish, self.start)
         return f"The CTF will run for {self.__relative_delta_to_string(td)}."
 
     def __time_until_event(self) -> str:
