@@ -58,5 +58,6 @@ class Event:
         output_array.append(f"{td.minutes} minutes") if td.minutes != 0 else None
         output_array.append(f"{td.seconds} seconds") if td.seconds != 0 else None
         output_array.append(f"{td.seconds} seconds") if td.seconds != 0 else None
+        output_array = map(lambda x: x[:-1] if x[0] == "1" else x, output_array)
         output = ", ".join(output_array)
         return output
