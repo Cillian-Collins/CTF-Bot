@@ -3,7 +3,7 @@ import os
 import pickle
 
 
-def load_event():
+def load_event() -> Event:
     if os.path.isfile("objects/Event.obj"):
         # Create reference to stored Event object
         f = open("objects/Event.obj", "rb")
@@ -14,7 +14,8 @@ def load_event():
         return e
     return None
 
-def save_event(e: Event):
+
+def save_event(e: Event) -> None:
     # Create reference to stored Event object
     f = open("objects/Event.obj", "wb")
 
