@@ -1,7 +1,7 @@
 from classes.Event import Event
 from discord.ext import commands
 from dotenv import load_dotenv
-import base64
+from utils.events import load_event, save_event
 import discord
 import json
 import os
@@ -31,7 +31,7 @@ async def on_ready():
 
 @bot.command()
 async def play(ctx):
-    e: Event = pickle.loads(base64.b64decode(os.getenv("EVENT")))
+    e: Event = load_event()
     role = discord.utils.get(ctx.message.guild.roles, id=e.role)
     await ctx.message.author.add_roles(role)
     await ctx.message.channel.send(f"You have been added to the channel for {e.name}.")
@@ -58,8 +58,8 @@ async def create(ctx, arg):
         # Update object to contain role
         e.set_role(role.id)
 
-        # Serialize event and save to environment variable
-        os.environ['EVENT'] = base64.b64encode(pickle.dumps(e)).decode('ascii')
+        # Save the event
+        save_event(e)
 
         # Create overwrites for new channel
         overwrites = {
@@ -81,8 +81,8 @@ async def create(ctx, arg):
 
 @bot.command()
 async def event(ctx):
-    if os.getenv("EVENT"):
-        e: Event = pickle.loads(base64.b64decode(os.getenv("EVENT")))
+    e: Event = load_event()
+    if e:
         await ctx.message.channel.send(e.status())
 
 
