@@ -30,6 +30,21 @@ class Event:
     def set_role(self, role_id: str) -> None:
         self.role = role_id
 
+    def set_name(self, name: str) -> None:
+        self.name = name
+
+    def set_description(self, description: str) -> None:
+        self.description = description
+
+    def set_url(self, url) -> None:
+        self.url = url
+
+    def set_start(self, start) -> None:
+        self.start = datetime.strptime(start, "%Y-%m-%dT%H:%M:%S%z")
+
+    def set_finish(self, finish) -> None:
+        self.finish = datetime.strptime(finish, "%Y-%m-%dT%H:%M:%S%z")
+
     def running_time(self) -> str:
         td = relativedelta(self.finish, self.start)
         return f"The CTF will run for {self.__relative_delta_to_string(td)}."

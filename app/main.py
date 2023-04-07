@@ -43,8 +43,30 @@ async def debug(ctx, arg):
 
 @bot.command()
 @commands.has_permissions(administrator=True)
+async def edit(ctx, mode, value):
+    if mode and value:
+        e: Event = load_event()
+        match mode:
+            case "name":
+                e.set_name(value)
+            case "description":
+                e.set_description(value)
+            case "start":
+                e.set_start(value)
+            case "finish":
+                e.set_finish(value)
+            case "url":
+                e.set_url(value)
+            case "role":
+                e.set_role(value)
+        save_event(e)
+        await ctx.message.channel.send(f"Event successfully updated ({mode}={value}).")
+
+
+@bot.command()
+@commands.has_permissions(administrator=True)
 async def create(ctx, arg):
-    if ctx.message.author.guild_permissions.administrator and arg and arg.isnumeric():
+    if arg and arg.isnumeric():
         r = requests.get(f"https://ctftime.org/api/v1/events/{arg}/",
                          headers={"User-Agent": None})
         data = json.loads(r.text)
@@ -75,7 +97,7 @@ async def create(ctx, arg):
         embed = discord.Embed(title=e.name, description=e.running_time(), color=0x00ff00, url=e.url)
 
         await channel.send(embed=embed)
-        await ctx.message.channel.send("Event successfully updated.")
+        await ctx.message.channel.send("Event successfully created.")
 
 
 @bot.command()
