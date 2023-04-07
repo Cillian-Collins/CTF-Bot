@@ -1,7 +1,7 @@
 from classes.Event import Event
 from discord.ext import commands
 from dotenv import load_dotenv
-from app.utils.events import load_event, save_event
+from utils.events import load_event, save_event
 import discord
 import json
 import os
