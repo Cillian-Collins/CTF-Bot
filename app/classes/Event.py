@@ -42,7 +42,7 @@ class Event:
         return self.__relative_delta_parse_message(td, "begins")
 
     def __time_until_finish(self) -> str:
-        td = relativedelta(datetime.now(timezone.utc), self.finish)
+        td = relativedelta(self.finish, datetime.now(timezone.utc))
         return self.__relative_delta_parse_message(td, "ends")
 
     def __relative_delta_parse_message(self, td, m) -> str:
