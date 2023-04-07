@@ -1,4 +1,4 @@
-from app.classes.Event import Event
+from classes.Event import Event
 from discord.ext import commands
 from dotenv import load_dotenv
 from app.utils.events import load_event, save_event
