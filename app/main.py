@@ -1,11 +1,10 @@
-from classes.Event import Event
+from app.classes.Event import Event
 from discord.ext import commands
 from dotenv import load_dotenv
-from utils.events import load_event, save_event
+from app.utils.events import load_event, save_event
 import discord
 import json
 import os
-import pickle
 import requests
 
 load_dotenv()

@@ -1,4 +1,4 @@
-from ..classes.Event import Event
+from app.classes.Event import Event
 import os
 import pickle
 
