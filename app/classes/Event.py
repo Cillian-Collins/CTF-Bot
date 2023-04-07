@@ -50,11 +50,10 @@ class Event:
     @staticmethod
     def __relative_delta_to_string(td) -> str:
         output_array = []
-        output_array.append(f"{td.days} days") if td.days != 0 else None
-        output_array.append(f"{td.hours} hours") if td.hours != 0 else None
-        output_array.append(f"{td.minutes} minutes") if td.minutes != 0 else None
-        output_array.append(f"{td.seconds} seconds") if td.seconds != 0 else None
-        output_array.append(f"{td.seconds} seconds") if td.seconds != 0 else None
+        output_array.append(f"{abs(td.days)} days") if td.days != 0 else None
+        output_array.append(f"{abs(td.hours)} hours") if td.hours != 0 else None
+        output_array.append(f"{abs(td.minutes)} minutes") if td.minutes != 0 else None
+        output_array.append(f"{abs(td.seconds)} seconds") if td.seconds != 0 else None
         output_array = map(lambda x: x[:-1] if x[0] == "1" else x, output_array)
         output = ", ".join(output_array)
         return output
