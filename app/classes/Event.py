@@ -50,13 +50,13 @@ class Event:
     def set_description(self, description: str) -> None:
         self.description = description
 
-    def set_url(self, url) -> None:
+    def set_url(self, url: str) -> None:
         self.url = url
 
-    def set_start(self, start) -> None:
+    def set_start(self, start: str) -> None:
         self.start = datetime.strptime(start, "%Y-%m-%dT%H:%M:%S%z")
 
-    def set_finish(self, finish) -> None:
+    def set_finish(self, finish: str) -> None:
         self.finish = datetime.strptime(finish, "%Y-%m-%dT%H:%M:%S%z")
 
     def running_time(self) -> str:
@@ -71,13 +71,13 @@ class Event:
         td = relativedelta(self.finish, datetime.now(timezone.utc))
         return self.__relative_delta_parse_message(td, "ends")
 
-    def __relative_delta_parse_message(self, td, m) -> str:
+    def __relative_delta_parse_message(self, td: relativedelta, m: str) -> str:
         output = self.__relative_delta_to_string(td)
         output += f" until {self.name} {m}.\nMore information: {self.url}"
         return output
 
     @staticmethod
-    def __relative_delta_to_string(td) -> str:
+    def __relative_delta_to_string(td: relativedelta) -> str:
         output_array = []
         output_array.append(f"{abs(td.days)} days") if td.days != 0 else None
         output_array.append(f"{abs(td.hours)} hours") if td.hours != 0 else None
