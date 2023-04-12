@@ -1,6 +1,7 @@
 from classes.Event import Event, Status
 from discord.ext import commands
 from dotenv import load_dotenv
+from enum import Enum
 from utils.events import load_event, save_event
 import discord
 import json
@@ -31,7 +32,7 @@ async def on_ready():
 @bot.command(brief='Join the current CTF', description='This adds you to the private channel for the current CTF event')
 async def play(ctx):
     e: Event = load_event()
-    status = e.event_status()
+    status: Enum = e.event_status()
     match status:
         case Status.READY | Status.STARTED:
             role = discord.utils.get(ctx.message.guild.roles, id=e.role)

@@ -29,7 +29,7 @@ class Event:
                 return Status.FINISHED
 
     def status(self) -> str:
-        status = self.event_status()
+        status: Enum = self.event_status()
         match status:
             case Status.READY:
                 # Event has not started yet
