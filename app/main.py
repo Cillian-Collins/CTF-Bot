@@ -1,4 +1,4 @@
-from classes.Event import Event
+from classes.Event import Event, Status
 from discord.ext import commands
 from dotenv import load_dotenv
 from utils.events import load_event, save_event
@@ -31,9 +31,16 @@ async def on_ready():
 @bot.command()
 async def play(ctx):
     e: Event = load_event()
-    role = discord.utils.get(ctx.message.guild.roles, id=e.role)
-    await ctx.message.author.add_roles(role)
-    await ctx.message.channel.send(f"You have been added to the channel for {e.name}.")
+    status = e.event_status()
+    match status:
+        case Status.READY | Status.STARTED:
+            role = discord.utils.get(ctx.message.guild.roles, id=e.role)
+            await ctx.message.author.add_roles(role)
+            await ctx.message.channel.send(f"You have been added to the channel for {e.name}.")
+        case Status.FINISHED:
+            await ctx.message.channel.send(f"{e.name} has finished.")
+        case _:
+            await ctx.message.channel.send(f"An error has occurred.")
 
 
 @bot.command()

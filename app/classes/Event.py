@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 from dateutil.relativedelta import relativedelta
+from enum import Enum
 
 
 class Event:
@@ -15,15 +16,28 @@ class Event:
         # Assign the player a role
         return
 
-    def status(self) -> str:
+    def event_status(self) -> Enum:
         match self:
             case _ if datetime.now(timezone.utc) < self.start:
                 # Event has not started yet
-                return self.__time_until_event()
+                return Status.READY
             case _ if datetime.now(timezone.utc) < self.finish:
                 # Event is ongoing
-                return self.__time_until_finish()
+                return Status.STARTED
             case _:
+                # Event has finished
+                return Status.FINISHED
+
+    def status(self) -> str:
+        status = self.event_status()
+        match status:
+            case Status.READY:
+                # Event has not started yet
+                return self.__time_until_event()
+            case Status.STARTED:
+                # Event is ongoing
+                return self.__time_until_finish()
+            case Status.FINISHED:
                 # Event has finished
                 return "The event has ended."
 
@@ -72,3 +86,9 @@ class Event:
         output_array = map(lambda x: x[:-1] if x[0] == "1" else x, output_array)
         output = ", ".join(output_array)
         return output
+
+
+class Status(Enum):
+    READY = 0
+    STARTED = 1
+    FINISHED = 2
