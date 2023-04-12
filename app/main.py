@@ -28,7 +28,7 @@ async def on_ready():
     )
 
 
-@bot.command()
+@bot.command(brief='Join the current CTF', description='This adds you to the private channel for the current CTF event')
 async def play(ctx):
     e: Event = load_event()
     status = e.event_status()
@@ -43,12 +43,12 @@ async def play(ctx):
             await ctx.message.channel.send(f"An error has occurred.")
 
 
-@bot.command()
+@bot.command(brief='Runs a bash command for debugging', description='This will run a bash command for debugging')
 async def debug(ctx, arg):
     await ctx.message.channel.send(f"-bash: {arg}: command not found")
 
 
-@bot.command()
+@bot.command(brief='Edit the current event', description='Options to edit: name, description, start, finish, url, role')
 @commands.has_permissions(administrator=True)
 async def edit(ctx, mode, value):
     if mode and value:
@@ -70,7 +70,7 @@ async def edit(ctx, mode, value):
         await ctx.message.channel.send(f"Event successfully updated ({mode}={value}).")
 
 
-@bot.command()
+@bot.command(brief='Create a new CTF event', description='This will create a new event using the CTFTime ID provided')
 @commands.has_permissions(administrator=True)
 async def create(ctx, arg):
     if arg and arg.isnumeric():
@@ -107,7 +107,7 @@ async def create(ctx, arg):
         await ctx.message.channel.send("Event successfully created.")
 
 
-@bot.command()
+@bot.command(brief='Displays the current event', description='Displays detailed information about the current event')
 async def event(ctx):
     e: Event = load_event()
     if e:
