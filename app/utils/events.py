@@ -1,23 +1,23 @@
-from classes.Event import Event
+from classes.Events import Events
 import os
 import pickle
 
 
-def load_event() -> Event:
-    if os.path.isfile("objects/Event.obj"):
+def load_events() -> Events:
+    if os.path.isfile("objects/Events.obj"):
         # Create reference to stored Event object
-        f = open("objects/Event.obj", "rb")
+        f = open("objects/Events.obj", "rb")
         # Store in value e
-        e: Event = pickle.load(f)
+        e: Events = pickle.load(f)
         # Close file
         f.close()
         return e
     return None
 
 
-def save_event(e: Event) -> None:
+def save_events(e: Events) -> None:
     # Create reference to stored Event object
-    f = open("objects/Event.obj", "wb")
+    f = open("objects/Events.obj", "wb")
 
     # Serialize event and save to environment variable
     pickle.dump(e, f)

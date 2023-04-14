@@ -1,8 +1,9 @@
 from classes.Event import Event, Status
+from classes.Events import Events
 from discord.ext import commands
 from dotenv import load_dotenv
 from enum import Enum
-from utils.events import load_event, save_event
+from utils.events import load_events, save_events
 import discord
 import json
 import os
@@ -29,19 +30,28 @@ async def on_ready():
     )
 
 
-@bot.command(brief='Join the current CTF', description='This adds you to the private channel for the current CTF event')
-async def play(ctx):
-    e: Event = load_event()
-    status: Enum = e.event_status()
-    match status:
-        case Status.READY | Status.STARTED:
-            role = discord.utils.get(ctx.message.guild.roles, id=e.role)
-            await ctx.message.author.add_roles(role)
-            await ctx.message.channel.send(f"You have been added to the channel for {e.name}.")
-        case Status.FINISHED:
-            await ctx.message.channel.send(f"{e.name} has finished.")
+@bot.command(brief='Join a CTF', description='This adds you to the private channel for the specified CTF event')
+async def play(ctx, arg):
+    event_list: Events = load_events()
+    match arg:
+        case arg.isalnum():
+            e: Event = event_list.filter_event(arg)
+            match e:
+                case Event():
+                    status: Enum = e.event_status()
+                    match status:
+                        case Status.READY | Status.STARTED:
+                            role = discord.utils.get(ctx.message.guild.roles, id=e.role)
+                            await ctx.message.author.add_roles(role)
+                            await ctx.message.channel.send(f"You have been added to the channel for {e.name}.")
+                        case Status.FINISHED:
+                            await ctx.message.channel.send(f"{e.name} has finished.")
+                        case _:
+                            await ctx.message.channel.send(f"An error has occurred.")
+                case _:
+                    await ctx.message.channel.send(event_list.print_events())
         case _:
-            await ctx.message.channel.send(f"An error has occurred.")
+            await ctx.message.channel.send(event_list.print_events())
 
 
 @bot.command(brief='Runs a bash command for debugging', description='This will run a bash command for debugging')
@@ -51,9 +61,10 @@ async def debug(ctx, arg):
 
 @bot.command(brief='Edit the current event', description='Options to edit: name, description, start, finish, url, role')
 @commands.has_permissions(administrator=True)
-async def edit(ctx, mode, value):
+async def edit(ctx, event_id, mode, value):
     if mode and value:
-        e: Event = load_event()
+        event_list: Events = load_events()
+        e: Event = event_list.filter_event(event_id)
         match mode:
             case "name":
                 e.set_name(value)
@@ -67,19 +78,21 @@ async def edit(ctx, mode, value):
                 e.set_url(value)
             case "role":
                 e.set_role(value)
-        save_event(e)
-        await ctx.message.channel.send(f"Event successfully updated ({mode}={value}).")
+        event_list.update_event(event_id, e)
+        save_events(event_list)
+        await ctx.message.channel.send(f"Event successfully updated ({event_id}: {mode}={value}).")
 
 
 @bot.command(brief='Create a new CTF event', description='This will create a new event using the CTFTime ID provided')
 @commands.has_permissions(administrator=True)
-async def create(ctx, arg):
-    if arg and arg.isnumeric():
+async def create(ctx, arg: str, arg2: str):
+    if arg and arg.isnumeric() and arg2 and arg2.isalnum():
         r = requests.get(f"https://ctftime.org/api/v1/events/{arg}/",
                          headers={"User-Agent": None})
         data = json.loads(r.text)
 
-        e = Event(data['title'], data['description'], data['start'], data['finish'], data['url'])
+        event_list: Events = load_events()
+        e = Event(arg2, data['title'], data['description'], data['start'], data['finish'], data['url'])
 
         # Create new role for CTF
         role = await ctx.message.guild.create_role(name=e.name)
@@ -87,8 +100,10 @@ async def create(ctx, arg):
         # Update object to contain role
         e.set_role(role.id)
 
+        event_list.add_event(e)
+
         # Save the event
-        save_event(e)
+        save_events(e)
 
         # Create overwrites for new channel
         overwrites = {
@@ -109,10 +124,18 @@ async def create(ctx, arg):
 
 
 @bot.command(brief='Displays the current event', description='Displays detailed information about the current event')
-async def event(ctx):
-    e: Event = load_event()
-    if e:
-        await ctx.message.channel.send(e.status())
+async def event(ctx, arg: str):
+    event_list: Events = load_events()
+    match arg:
+        case arg.isalnum():
+            e: Event = event_list.filter_event(arg)
+            match e:
+                case Event():
+                    await ctx.message.channel.send(e.status())
+                case _:
+                    await ctx.message.channel.send(event_list.print_events())
+        case _:
+            await ctx.message.channel.send(event_list.print_events())
 
 
 bot.run(TOKEN)

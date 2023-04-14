@@ -4,7 +4,8 @@ from enum import Enum
 
 
 class Event:
-    def __init__(self, name: str, description: str, start: str, finish: str, url: str):
+    def __init__(self, event_id: str, name: str, description: str, start: str, finish: str, url: str):
+        self.id = event_id
         self.name = name
         self.description = description
         self.start = datetime.strptime(start, "%Y-%m-%dT%H:%M:%S%z")
