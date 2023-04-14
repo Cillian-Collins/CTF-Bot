@@ -34,7 +34,7 @@ async def on_ready():
 async def play(ctx, arg=None):
     event_list: Events = load_events()
     match arg:
-        case arg.isalnum():
+        case arg if arg and arg.isalnum():
             e: Event = event_list.filter_event(arg)
             match e:
                 case Event():
@@ -127,7 +127,7 @@ async def create(ctx, arg: str, arg2: str):
 async def event(ctx, arg=None):
     event_list: Events = load_events()
     match arg:
-        case arg.isalnum():
+        case arg if arg and arg.isalnum():
             e: Event = event_list.filter_event(arg)
             match e:
                 case Event():
