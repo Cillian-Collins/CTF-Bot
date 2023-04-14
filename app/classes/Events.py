@@ -1,4 +1,4 @@
-from Event import Event, Status
+from classes.Event import Event, Status
 
 
 class Events:
