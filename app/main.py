@@ -103,7 +103,7 @@ async def create(ctx, arg: str, arg2: str):
         event_list.add_event(e)
 
         # Save the event
-        save_events(e)
+        save_events(event_list)
 
         # Create overwrites for new channel
         overwrites = {
