@@ -12,7 +12,7 @@ def load_events() -> Events:
         # Close file
         f.close()
         return e
-    return None
+    return Events([])
 
 
 def save_events(e: Events) -> None:
