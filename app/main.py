@@ -31,7 +31,7 @@ async def on_ready():
 
 
 @bot.command(brief='Join a CTF', description='This adds you to the private channel for the specified CTF event')
-async def play(ctx, arg):
+async def play(ctx, arg=None):
     event_list: Events = load_events()
     match arg:
         case arg.isalnum():
@@ -124,7 +124,7 @@ async def create(ctx, arg: str, arg2: str):
 
 
 @bot.command(brief='Displays the current event', description='Displays detailed information about the current event')
-async def event(ctx, arg: str):
+async def event(ctx, arg=None):
     event_list: Events = load_events()
     match arg:
         case arg.isalnum():
