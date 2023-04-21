@@ -21,7 +21,9 @@ class Events:
             case 0:
                 return "There are currently no active events."
             case _:
-                return "The following events are active:\n" + "\n".join([event.id for event in self.events])
+                return "The following events are active:\n" + "\n".join(
+                    [event.id for event in self.events if event.event_status() != Status.FINISHED]
+                )
 
     def update_event(self, event_id: str, new_event: Event) -> None:
         e: Event = self.filter_event(event_id)
