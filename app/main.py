@@ -123,7 +123,11 @@ async def create(ctx, arg: str, arg2: str):
         await ctx.message.channel.send("Event successfully created.")
 
 
-@bot.command(brief='Displays the current event', description='Displays detailed information about the current event')
+@bot.command(
+    aliases=['events'],
+    brief='Displays the current event',
+    description='Displays detailed information about the current event'
+)
 async def event(ctx, arg=None):
     event_list: Events = load_events()
     match arg:
