@@ -2,3 +2,4 @@ discord.py
 python-dateutil
 python-dotenv
 requests
+thefuzz[speedup]
