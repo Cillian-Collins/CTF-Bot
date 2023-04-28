@@ -11,7 +11,7 @@ class Events:
                 self.events.append(e)
 
     def filter_event(self, event_id: str) -> Event:
-        event_id = process.extractOne(event_id, [event.id for event in self.events])
+        event_id = process.extractOne(event_id, [event.id for event in self.events])[0]
         e: list[Event] = list(filter(lambda event: event.id.lower() == event_id.lower(), self.events))
         match e:
             case e if len(e) > 0:
