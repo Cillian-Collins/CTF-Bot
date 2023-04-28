@@ -1,5 +1,5 @@
 from classes.Event import Event, Status
-
+from thefuzz import process
 
 class Events:
     def __init__(self, events: list[Event]):
@@ -11,6 +11,7 @@ class Events:
                 self.events.append(e)
 
     def filter_event(self, event_id: str) -> Event:
+        event_id = process.extractOne(event_id, [event.id for event in self.events])
         e: list[Event] = list(filter(lambda event: event.id.lower() == event_id.lower(), self.events))
         match e:
             case e if len(e) > 0:
