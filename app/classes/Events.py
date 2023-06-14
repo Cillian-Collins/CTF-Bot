@@ -11,8 +11,12 @@ class Events:
             case Status.READY | Status.STARTED:
                 self.events.append(e)
 
-    def get_channel_event(self, channel: int) -> Event:
-        next((event for event in self.events if event.channel == channel), None)
+    def get_channel_event(self, channel_id: int) -> Event:
+        print(channel_id)
+        print(self.events)
+        for event in self.events:
+            print(event.channel)
+        next((event for event in self.events if event.channel == channel_id), None)
 
     def filter_event(self, event_id: str) -> Event:
         event_id, score = process.extractOne(

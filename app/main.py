@@ -68,22 +68,24 @@ async def play(ctx, arg=None):
     description="This will archive an event channel",
 )
 @commands.has_permissions(administrator=True)
-async def archive(ctx):
+async def archive(ctx, slug):
     event_list: Events = load_events()
-    e: Event = event_list.get_channel_event(ctx.message.channel)
-    match e:
-        case None:
-            await ctx.message.channel.send(
-                "There is no event associated with this channel."
-            )
-        case e if e.event_status != Status.FINISHED:
-            await ctx.message.channel.send(
-                "This event is not finished yet, so it cannot be archived."
-            )
+    match slug:
+        case slug if slug and slug.isalnum():
+            e: Event = event_list.filter_event(slug)
+            match e:
+                case e if e.event_status != Status.FINISHED:
+                    await ctx.message.channel.send(
+                        "This event is not finished yet, so it cannot be archived."
+                    )
+                case _:
+                    archive_category = 1030170219160813638
+                    ctx.message.channel.edit(category=archive_category)
+                    await ctx.message.channel.send("Channel successfully archived.")
         case _:
-            archive_category = 1030170219160813638
-            ctx.message.channel.edit(category=archive_category)
-            await ctx.message.channel.send("Channel successfully archived.")
+            await ctx.message.channel.send(
+                "There is no event associated with this identifier."
+            )
 
 
 @bot.command(
@@ -144,6 +146,11 @@ async def create(ctx, ctftime_id: str, slug: str):
         # Update object to contain role
         e.set_role(role.id)
 
+        event_list.add_event(e)
+
+        # Save the event
+        save_events(event_list)
+
         # Create overwrites for new channel
         overwrites = {
             ctx.message.guild.default_role: discord.PermissionOverwrite(
@@ -159,13 +166,6 @@ async def create(ctx, ctftime_id: str, slug: str):
         channel = await ctx.message.guild.create_text_channel(
             e.name, category=category, overwrites=overwrites
         )
-
-        e.set_channel(channel)
-
-        event_list.add_event(e)
-
-        # Save the event
-        save_events(event_list)
 
         embed = discord.Embed(
             title=e.name, description=e.running_time(), color=0x00FF00, url=e.url
