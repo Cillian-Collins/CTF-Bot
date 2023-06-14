@@ -12,7 +12,6 @@ class Event:
         start: str,
         finish: str,
         url: str,
-        channel: int,
     ):
         self.id = event_id
         self.name = name
@@ -20,7 +19,7 @@ class Event:
         self.start = datetime.strptime(start, "%Y-%m-%dT%H:%M:%S%z")
         self.finish = datetime.strptime(finish, "%Y-%m-%dT%H:%M:%S%z")
         self.url = url
-        self.channel = channel
+        self.channel = None
         self.role = None
 
     def add_player(self, player_id: str) -> None:
