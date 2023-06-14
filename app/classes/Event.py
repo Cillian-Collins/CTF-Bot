@@ -12,6 +12,7 @@ class Event:
         start: str,
         finish: str,
         url: str,
+        channel: int,
     ):
         self.id = event_id
         self.name = name
@@ -19,6 +20,7 @@ class Event:
         self.start = datetime.strptime(start, "%Y-%m-%dT%H:%M:%S%z")
         self.finish = datetime.strptime(finish, "%Y-%m-%dT%H:%M:%S%z")
         self.url = url
+        self.channel = channel
         self.role = None
 
     def add_player(self, player_id: str) -> None:
@@ -67,6 +69,9 @@ class Event:
 
     def set_finish(self, finish: str) -> None:
         self.finish = datetime.strptime(finish, "%Y-%m-%dT%H:%M:%S%z")
+
+    def set_channel(self, channel: int) -> None:
+        self.channel = channel
 
     def running_time(self) -> str:
         td = relativedelta(self.finish, self.start)
