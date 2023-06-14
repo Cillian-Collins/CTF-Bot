@@ -73,16 +73,14 @@ class Event:
         return f"The CTF will run for {self.__relative_delta_to_string(td)}."
 
     def __time_until_event(self) -> str:
-        td = relativedelta(self.start, datetime.now(timezone.utc))
-        return self.__relative_delta_parse_message(td, "begins")
+        return self.__date_time_parse_message(self.start, "begins")
 
-    def __time_until_finish(self) -> str:
-        td = relativedelta(self.finish, datetime.now(timezone.utc))
-        return self.__relative_delta_parse_message(td, "ends")
+    def __time_until_finish(self) -> str: 
+        return self.__date_time_parse_message(self.finish, "ends")
 
-    def __relative_delta_parse_message(self, td: relativedelta, m: str) -> str:
-        output = self.__relative_delta_to_string(td)
-        output += f" until {self.name} {m}.\nMore information: {self.url}"
+    def __date_time_parse_message(self, dt: datetime, m: str) -> str:
+        ts = round(dt.timestamp())
+        output = f"{self.name} {m} <t:{ts}:R>.\nMore information: {self.url}"
         return output
 
     @staticmethod
