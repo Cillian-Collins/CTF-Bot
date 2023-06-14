@@ -75,7 +75,7 @@ class Event:
     def __time_until_event(self) -> str:
         return self.__date_time_parse_message(self.start, "begins")
 
-    def __time_until_finish(self) -> str: 
+    def __time_until_finish(self) -> str:
         return self.__date_time_parse_message(self.finish, "ends")
 
     def __date_time_parse_message(self, dt: datetime, m: str) -> str:
