@@ -16,5 +16,5 @@ def load_events() -> Events:
 def save_events(e: Events) -> None:
     # Create reference to stored Event object
     with open("objects/Events.obj", "wb") as f:
-    # Serialize event and save to environment variable
+        # Serialize event and save to environment variable
         pickle.dump(e, f)

@@ -4,7 +4,15 @@ from enum import Enum
 
 
 class Event:
-    def __init__(self, event_id: str, name: str, description: str, start: str, finish: str, url: str):
+    def __init__(
+        self,
+        event_id: str,
+        name: str,
+        description: str,
+        start: str,
+        finish: str,
+        url: str,
+    ):
         self.id = event_id
         self.name = name
         self.description = description
@@ -80,10 +88,14 @@ class Event:
     @staticmethod
     def __relative_delta_to_string(td: relativedelta) -> str:
         output_array = []
-        if td.days != 0: output_array.append(f"{abs(td.days)} days")
-        if td.hours != 0: output_array.append(f"{abs(td.hours)} hours")
-        if td.minutes != 0: output_array.append(f"{abs(td.minutes)} minutes")
-        if td.seconds != 0: output_array.append(f"{abs(td.seconds)} seconds")
+        if td.days != 0:
+            output_array.append(f"{abs(td.days)} days")
+        if td.hours != 0:
+            output_array.append(f"{abs(td.hours)} hours")
+        if td.minutes != 0:
+            output_array.append(f"{abs(td.minutes)} minutes")
+        if td.seconds != 0:
+            output_array.append(f"{abs(td.seconds)} seconds")
         output_array = map(lambda x: x[:-1] if x[0] == "1" else x, output_array)
         output = ", ".join(output_array)
         return output

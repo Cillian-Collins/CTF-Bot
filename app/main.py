@@ -10,12 +10,16 @@ import os
 import requests
 
 load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD = os.getenv('DISCORD_GUILD')
+TOKEN = os.getenv("DISCORD_TOKEN")
+GUILD = os.getenv("DISCORD_GUILD")
 
 intents = discord.Intents.all()
 
-bot = commands.Bot(command_prefix='!', intents=intents, activity=discord.Game(name="a CTF? Type !event"))
+bot = commands.Bot(
+    command_prefix="!",
+    intents=intents,
+    activity=discord.Game(name="a CTF? Type !event"),
+)
 
 
 @bot.event
@@ -25,12 +29,15 @@ async def on_ready():
             break
 
     print(
-        f'{bot.user} is connected to the following guild:\n'
-        f'{guild.name} (id: {guild.id})'
+        f"{bot.user} is connected to the following guild:\n"
+        f"{guild.name} (id: {guild.id})"
     )
 
 
-@bot.command(brief='Join a CTF', description='This adds you to the private channel for the specified CTF event')
+@bot.command(
+    brief="Join a CTF",
+    description="This adds you to the private channel for the specified CTF event",
+)
 async def play(ctx, arg=None):
     event_list: Events = load_events()
     match arg:
@@ -43,7 +50,9 @@ async def play(ctx, arg=None):
                         case Status.READY | Status.STARTED:
                             role = discord.utils.get(ctx.message.guild.roles, id=e.role)
                             await ctx.message.author.add_roles(role)
-                            await ctx.message.channel.send(f"You have been added to the channel for {e.name}.")
+                            await ctx.message.channel.send(
+                                f"You have been added to the channel for {e.name}."
+                            )
                         case Status.FINISHED:
                             await ctx.message.channel.send(f"{e.name} has finished.")
                         case _:
@@ -54,12 +63,18 @@ async def play(ctx, arg=None):
             await ctx.message.channel.send(event_list.print_events())
 
 
-@bot.command(brief='Runs a bash command for debugging', description='This will run a bash command for debugging')
+@bot.command(
+    brief="Runs a bash command for debugging",
+    description="This will run a bash command for debugging",
+)
 async def debug(ctx, arg):
     await ctx.message.channel.send(f"-bash: {arg}: command not found")
 
 
-@bot.command(brief='Edit the current event', description='Options to edit: name, description, start, finish, url, role')
+@bot.command(
+    brief="Edit the current event",
+    description="Options to edit: name, description, start, finish, url, role",
+)
 @commands.has_permissions(administrator=True)
 async def edit(ctx, event_id, mode, value):
     if mode and value:
@@ -80,19 +95,33 @@ async def edit(ctx, event_id, mode, value):
                 e.set_role(value)
         event_list.update_event(event_id, e)
         save_events(event_list)
-        await ctx.message.channel.send(f"Event successfully updated ({event_id}: {mode}={value}).")
+        await ctx.message.channel.send(
+            f"Event successfully updated ({event_id}: {mode}={value})."
+        )
 
 
-@bot.command(brief='Create a new CTF event', description='This will create a new event using the CTFTime ID provided')
+@bot.command(
+    brief="Create a new CTF event",
+    description="This will create a new event using the CTFTime ID provided",
+)
 @commands.has_permissions(administrator=True)
-async def create(ctx, arg: str, arg2: str):
-    if arg and arg.isnumeric() and arg2 and arg2.isalnum():
-        r = requests.get(f"https://ctftime.org/api/v1/events/{arg}/",
-                         headers={"User-Agent": None})
+async def create(ctx, ctftime_id: str, slug: str):
+    if ctftime_id and ctftime_id.isnumeric() and slug and slug.isalnum():
+        r = requests.get(
+            f"https://ctftime.org/api/v1/events/{ctftime_id}/",
+            headers={"User-Agent": None},
+        )
         data = json.loads(r.text)
 
         event_list: Events = load_events()
-        e = Event(arg2, data['title'], data['description'], data['start'], data['finish'], data['url'])
+        e = Event(
+            slug,
+            data["title"],
+            data["description"],
+            data["start"],
+            data["finish"],
+            data["url"],
+        )
 
         # Create new role for CTF
         role = await ctx.message.guild.create_role(name=e.name)
@@ -107,7 +136,9 @@ async def create(ctx, arg: str, arg2: str):
 
         # Create overwrites for new channel
         overwrites = {
-            ctx.message.guild.default_role: discord.PermissionOverwrite(read_messages=False),
+            ctx.message.guild.default_role: discord.PermissionOverwrite(
+                read_messages=False
+            ),
             role: discord.PermissionOverwrite(read_messages=True),
         }
 
@@ -115,18 +146,27 @@ async def create(ctx, arg: str, arg2: str):
         category = ctx.message.guild.get_channel(1025881356057714748)
 
         # Create new channel for CTF
-        channel = await ctx.message.guild.create_text_channel(e.name, category=category, overwrites=overwrites)
+        channel = await ctx.message.guild.create_text_channel(
+            e.name, category=category, overwrites=overwrites
+        )
 
-        embed = discord.Embed(title=e.name, description=e.running_time(), color=0x00ff00, url=e.url)
+        embed = discord.Embed(
+            title=e.name, description=e.running_time(), color=0x00FF00, url=e.url
+        )
 
         await channel.send(embed=embed)
+
+        # Send message to announcements
+        announcements = ctx.message.guild.get_channel(1025878150086930497)
+        await announcements.send(f"{e.name} has started. Type `!{slug}` to play.")
+
         await ctx.message.channel.send("Event successfully created.")
 
 
 @bot.command(
-    aliases=['events'],
-    brief='Displays the current event',
-    description='Displays detailed information about the current event'
+    aliases=["events"],
+    brief="Displays the current event",
+    description="Displays detailed information about the current event",
 )
 async def event(ctx, arg=None):
     event_list: Events = load_events()

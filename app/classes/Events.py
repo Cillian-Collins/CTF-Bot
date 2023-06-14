@@ -1,6 +1,7 @@
 from classes.Event import Event, Status
 from thefuzz import process
 
+
 class Events:
     def __init__(self, events: list[Event]):
         self.events = events
@@ -11,10 +12,16 @@ class Events:
                 self.events.append(e)
 
     def filter_event(self, event_id: str) -> Event:
-        event_id, score = process.extractOne(event_id, [event.id for event in self.events])
+        event_id, score = process.extractOne(
+            event_id, [event.id for event in self.events]
+        )
         match score > 50:
             case True:
-                e: list[Event] = list(filter(lambda event: event.id.lower() == event_id.lower(), self.events))
+                e: list[Event] = list(
+                    filter(
+                        lambda event: event.id.lower() == event_id.lower(), self.events
+                    )
+                )
                 match len(e) > 0:
                     case True:
                         return e[0]
@@ -25,7 +32,11 @@ class Events:
                 return "There are currently no active events."
             case _:
                 return "The following events are active:\n" + "\n".join(
-                    [event.id for event in self.events if event.event_status() != Status.FINISHED]
+                    [
+                        event.id
+                        for event in self.events
+                        if event.event_status() != Status.FINISHED
+                    ]
                 )
 
     def update_event(self, event_id: str, new_event: Event) -> None:
