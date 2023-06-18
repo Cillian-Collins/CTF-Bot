@@ -175,7 +175,7 @@ async def create(ctx, ctftime_id: str, slug: str):
 
         # Send message to announcements
         announcements = ctx.message.guild.get_channel(1025878150086930497)
-        await announcements.send(f"{e.name} has started. Type `!{slug}` to play.")
+        await announcements.send(f"{e.name} has started. Type `!play {slug}` to play.")
 
         await ctx.message.channel.send("Event successfully created.")
 
