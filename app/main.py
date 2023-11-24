@@ -199,5 +199,25 @@ async def event(ctx, arg=None):
         case _:
             await ctx.message.channel.send(event_list.print_events())
 
+@bot.command(
+    aliases=["top10"],
+    brief="Top 10 CTFTime events",
+    description="Displays team's top 10 CTFTime events by CTFTime points",
+)
+async def top10(ctx, arg=None):
+    headers = {'User-Agent':'Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0'}
+    r = requests.get("https://ctftime.org/team/179144", headers=headers).text
+    results = []
+    for line in r.split('\n'):
+        if 'place_ico' in line:
+            place = line.split('<td class="place">')[1].split('<')[0]
+            event = line.split('</td><td><a href="')[1].split('>')[1].split('<')[0]
+            ctftime_points = line.split('<td>')[-1].split('<')[0]
+            results.append({'place':place,'points':float(ctftime_points),'event':event})
+    results = sorted(results,key=lambda x: x['points'], reverse=True)
+    output = f"place\t| points\t| event\n{'-'*31}\n"
+    for x in results[:10]:
+        output+=f"{x['place']}\t| {x['points']:.3f}\t| {x['event']}\n"
+    await ctx.message.channel.send(output)
 
 bot.run(TOKEN)
