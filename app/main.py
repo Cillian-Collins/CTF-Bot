@@ -200,7 +200,6 @@ async def event(ctx, arg=None):
             await ctx.message.channel.send(event_list.print_events())
 
 @bot.command(
-    aliases=["top10"],
     brief="Top 10 CTFTime events",
     description="Displays team's top 10 CTFTime events by CTFTime points",
 )
