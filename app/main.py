@@ -216,7 +216,10 @@ async def top10(ctx, arg=None):
     results = sorted(results,key=lambda x: x['points'], reverse=True)
     output = f"place\t| points\t| event\n{'-'*31}\n"
     for x in results[:10]:
-        output+=f"{x['place']}\t| {x['points']:.3f}\t| {x['event']}\n"
-    await ctx.message.channel.send(output)
+        if len(x['place'])==1:
+            output+=f" {x['place']}\t| {x['points']:.3f}\t| {x['event']}\n"
+        else:
+            output+=f"{x['place']}\t| {x['points']:.3f}\t| {x['event']}\n"
+    await ctx.message.channel.send(f"```{output}```")
 
 bot.run(TOKEN)
