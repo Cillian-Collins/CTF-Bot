@@ -125,8 +125,9 @@ async def edit(ctx, event_id, mode, value):
 async def create(ctx, ctftime_id: str, slug: str):
     if ctftime_id and ctftime_id.isnumeric() and slug and slug.isalnum():
         r = requests.get(
-            f"https://ctftime.org/api/v1/events/{ctftime_id}/",
+            f"https://109.233.61.11/api/v1/events/{ctftime_id}/",
             headers={"User-Agent": None},
+            verify=False,
         )
         data = json.loads(r.text)
 
@@ -205,7 +206,7 @@ async def event(ctx, arg=None):
 )
 async def top10(ctx, arg=None):
     headers = {'User-Agent':'Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0'}
-    r = requests.get("https://ctftime.org/team/179144", headers=headers).text
+    r = requests.get("https://109.233.61.11/team/179144", headers=headers, verify=False).text
     results = []
     for line in r.split('\n'):
         if 'place_ico' in line:
