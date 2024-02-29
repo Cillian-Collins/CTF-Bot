@@ -213,6 +213,8 @@ async def top10(ctx, arg=None):
             event = line.split('</td><td><a href="')[1].split('>')[1].split('<')[0]
             ctftime_points = line.split('<td>')[-1].split('<')[0]
             results.append({'place':place,'points':float(ctftime_points),'event':event})
+        if '<div class="tab-pane" id="rating_' in line:
+            break
     results = sorted(results,key=lambda x: x['points'], reverse=True)
     output = f"place\t| points\t| event\n{'-'*31}\n"
     for x in results[:10]:
